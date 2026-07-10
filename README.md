@@ -53,6 +53,35 @@ python scripts/model_card.py --app-version 1.4.0 --git-sha $(git rev-parse --sho
   --policy app/policies/policy_v1.json --eval-passed 12 --eval-total 12
 ```
 
+## Publish to GitHub (needed before CI/CD)
+
+The `.github/workflows/deploy.yml` pipeline runs from your own repo, so publish the lab first.
+GitHub rejects pushing files under `.github/workflows/` unless the `gh` token carries the
+`workflow` scope — grant it, then push. Replace `<your-github-id>` with your account.
+
+```bash
+# 1) create the repo on GitHub (public) under your account
+gh repo create <your-github-id>/azure-ai-labs-10abc --public --source . --remote origin
+#    (or create it in the GitHub UI, then:
+#     git init -b main && git remote add origin \
+#       https://github.com/<your-github-id>/azure-ai-labs-10abc.git)
+
+# 2) point gh at the account that owns the repo
+gh auth switch --user <your-github-id>
+
+# 3) grant the token the 'workflow' scope (needed for .github/workflows/*)
+#    interactive: opens a browser / device-code prompt
+gh auth refresh -h github.com -u <your-github-id> -s workflow
+
+# 4) commit and push the CI/CD workflow
+git add .github/workflows/deploy.yml
+git commit -m "ci: add Container Apps blue/green deploy workflow"
+git push -u origin main
+```
+
+> If the push is rejected with *"refusing to allow an OAuth App to create or update workflow …
+> without `workflow` scope"*, step 3 was skipped — run it and push again.
+
 ## On Azure
 
 ```bash
