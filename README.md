@@ -1,4 +1,4 @@
-# Lab 10 — Container Apps Deploy · CI/CD · LLMOps (Capstone)
+# Lab 10 — Container Apps Deploy · CI/CD · LLMOps (Capstone)  FDE Training
 
 Take the agent to production: **containerise** it, push to **Azure Container Registry**,
 deploy to **Azure Container Apps** with auto-scaling + health probes, and wire a
